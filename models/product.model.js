@@ -15,7 +15,7 @@ module.exports = (sequelize, Sequelize) =>{
             type: Sequelize.STRING,
             allowNull: false,
         },
-        price:{
+        cost:{
             type: Sequelize.INTEGER,
             allowNull: false
          }

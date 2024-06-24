@@ -8,6 +8,8 @@ const { log } = require("console")
 const Sequelize = db.Sequelize
 const userData = require("./seedData/userData.json")
 const roleData = require("./seedData/roleData.json")
+const categoryData = require("./seedData/categoryData.json")
+const productData = require("./seedData/productData.json")
 const { Op } = Sequelize
 
 db.sequelize.sync({ force: true }).then(() => {
