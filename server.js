@@ -3,7 +3,6 @@ const app = express()
 const bodyParser = require("body-parser")
 app.use(bodyParser.json())
 require("dotenv").config()
-const { signup , signin } = require("./controllers/auth.controller")
 const db = require("./models")
 const { log } = require("console")
 const Sequelize = db.Sequelize
@@ -23,11 +22,11 @@ async function init() {
     await db.role.bulkCreate(roleData)
     log("########### Initial Roles created ###########")
 
-    // await db.category.bulkCreate(categoryData)
-    // log("########### Initial Categories created ###########")
+    await db.category.bulkCreate(categoryData)
+    log("########### Initial Categories created ###########")
 
-    // await db.product.bulkCreate(productData)
-    // log("########### Initial Products created ###########")
+    await db.product.bulkCreate(productData)
+    log("########### Initial Products created ###########")
 
     //Assigning roles to the users;
     for (let i = 0; i < createdUsers.length; i++) {
@@ -44,6 +43,7 @@ async function init() {
     }
 
     let countArray = await countUsersByRole()
+    
     log(countArray, "countArraycountArraycountArraycountArray")
     for (let i = 0; i < countArray.length; i++) {
         let role = await db.role.findOne({ where: { name: countArray[i].name } })
@@ -51,12 +51,12 @@ async function init() {
         role.save();
     }
 
-    //   const categories = await db.category.findAll()
-    //   for (let index = 0; index < categories.length; index++) {
-    //     let products = await db.product.findAll({ where: { categoryId: categories[index].id } })
-    //     categories[index].totalProducts = products.length
-    //     await categories[index].save()
-    //   }
+    const categories = await db.category.findAll()
+    for (let index = 0; index < categories.length; index++) {
+        let products = await db.product.findAll({ where: { categoryId: categories[index].id } })
+        categories[index].totalProducts = products.length
+        await categories[index].save()
+    }
 }
 
 async function countUsersByRole() {
@@ -87,8 +87,7 @@ async function countUsersByRole() {
 }
 
 require("./routes/auth.user")(app)
-// app.post("/ecomm/api/v1/auth/signup", signup);
-// app.post("/ecomm/api/v1/auth/signin", signin);
+
 
 app.listen(process.env.PORT,
     () => console.log(`Server has been started on port number ${process.env.PORT}`)
